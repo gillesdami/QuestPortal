@@ -771,48 +771,6 @@ public class Windows implements TrayListener, TopBarWidget.Delegate, TitleBarWid
         updateViews();
     }
 
-    public void restoreSessions() {
-        if (mIsRestoreEnabled && mWindowsState != null) {
-            ArrayList<Session> restoredSessions = new ArrayList<>();
-            if (mWindowsState.tabs != null) {
-                mWindowsState.tabs.forEach(state -> {
-                    restoredSessions.add(SessionStore.get().createSuspendedSession(state));
-                    GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.PRE_EXISTING);
-                });
-            }
-
-            for (WindowState windowState : mWindowsState.regularWindowsState) {
-                WindowWidget targetWindow = getWindowWithPlacement(windowState.placement);
-                if (targetWindow != null) {
-                    if (windowState.tabIndex >= 0 && windowState.tabIndex < restoredSessions.size()) {
-                        Session defaultSession = targetWindow.getSession();
-                        Session session = restoredSessions.get(windowState.tabIndex);
-                        targetWindow.setSession(session, WindowWidget.DEACTIVATE_CURRENT_SESSION);
-                        session.setActive(true);
-                        // Destroy the default blank session
-                        SessionStore.get().destroySession(defaultSession);
-
-                    } else {
-                        targetWindow.loadHome();
-                    }
-                }
-            }
-
-            if (mWindowsState.privateMode) {
-                enterPrivateMode();
-            } else {
-                exitPrivateMode();
-            }
-        }
-
-        if (mAddedTabUri != null) {
-            openNewTab(mAddedTabUri, mAddedTabLocation);
-            mAddedTabUri = null;
-        }
-
-        mAfterRestore = true;
-    }
-
     private void removeWindow(@NonNull WindowWidget aWindow) {
         BitmapCache.getInstance(mContext).removeBitmap(aWindow.getSession().getId());
         mWidgetManager.removeWidget(aWindow);

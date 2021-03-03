@@ -353,9 +353,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
         attachToWindow(mWindows.getFocusedWindow(), null);
 
         addWidgets(Arrays.asList(mRootWidget, mKeyboard, mWebXRInterstitial));
-
-        // TODO Cleanup
-        mWindows.restoreSessions();
     }
 
     private void attachToWindow(@NonNull WindowWidget aWindow, @Nullable WindowWidget aPrevWindow) {
