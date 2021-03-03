@@ -44,7 +44,6 @@ import org.mozilla.vrbrowser.db.SitePermission;
 import org.mozilla.vrbrowser.search.suggestions.SuggestionsProvider;
 import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.viewmodel.SettingsViewModel;
-import org.mozilla.vrbrowser.ui.viewmodel.TrayViewModel;
 import org.mozilla.vrbrowser.ui.viewmodel.WindowViewModel;
 import org.mozilla.vrbrowser.ui.views.NavigationURLBar;
 import org.mozilla.vrbrowser.ui.views.UIButton;
@@ -75,8 +74,7 @@ public class NavigationBarWidget extends UIWidget implements GeckoSession.Naviga
         GeckoSession.ContentDelegate, WidgetManagerDelegate.WorldClickListener,
         WidgetManagerDelegate.UpdateListener, SessionChangeListener,
         NavigationURLBar.NavigationURLBarDelegate, VoiceSearchWidget.VoiceSearchDelegate,
-        SharedPreferences.OnSharedPreferenceChangeListener, SuggestionsWidget.URLBarPopupDelegate,
-        TrayListener, WindowWidget.WindowListener {
+        SharedPreferences.OnSharedPreferenceChangeListener, SuggestionsWidget.URLBarPopupDelegate, WindowWidget.WindowListener {
 
     private static final int TAB_ADDED_NOTIFICATION_ID = 0;
     private static final int TAB_SENT_NOTIFICATION_ID = 1;
@@ -92,7 +90,6 @@ public class NavigationBarWidget extends UIWidget implements GeckoSession.Naviga
     }
 
     private WindowViewModel mViewModel;
-    private TrayViewModel mTrayViewModel;
     private SettingsViewModel mSettingsViewModel;
     private NavigationBarBinding mBinding;
     private AudioEngine mAudio;
@@ -137,10 +134,6 @@ public class NavigationBarWidget extends UIWidget implements GeckoSession.Naviga
     }
 
     private void initialize(@NonNull Context aContext) {
-        mTrayViewModel = new ViewModelProvider(
-                (VRBrowserActivity)getContext(),
-                ViewModelProvider.AndroidViewModelFactory.getInstance(((VRBrowserActivity) getContext()).getApplication()))
-                .get(TrayViewModel.class);
         mSettingsViewModel = new ViewModelProvider(
                 (VRBrowserActivity)getContext(),
                 ViewModelProvider.AndroidViewModelFactory.getInstance(((VRBrowserActivity) getContext()).getApplication()))
@@ -637,8 +630,6 @@ public class NavigationBarWidget extends UIWidget implements GeckoSession.Naviga
 
         mWidgetManager.pushWorldBrightness(this, WidgetManagerDelegate.DEFAULT_DIM_BRIGHTNESS);
 
-        mTrayViewModel.setShouldBeVisible(false);
-
         if (mProjectionMenu == null) {
             mProjectionMenu = new VideoProjectionMenuWidget(getContext());
             mProjectionMenu.setParentWidget(this);
@@ -689,7 +680,6 @@ public class NavigationBarWidget extends UIWidget implements GeckoSession.Naviga
 
         mWidgetManager.popWorldBrightness(this);
         AnimationHelper.fadeOut(mBinding.navigationBarFullscreen.fullScreenModeContainer, 0, null);
-        mTrayViewModel.setShouldBeVisible(true);
         closeFloatingMenus();
         mWidgetManager.popWorldBrightness(mBrightnessWidget);
     }
@@ -712,7 +702,6 @@ public class NavigationBarWidget extends UIWidget implements GeckoSession.Naviga
             AnimationHelper.fadeOut(mBinding.navigationBarNavigation.navigationBarContainer, 0, null);
         }
         mWidgetManager.pushBackHandler(mResizeBackHandler);
-        mTrayViewModel.setShouldBeVisible(false);
         closeFloatingMenus();
 
         float maxScale = 3.0f;
@@ -772,7 +761,6 @@ public class NavigationBarWidget extends UIWidget implements GeckoSession.Naviga
         }
         AnimationHelper.fadeOut(mBinding.navigationBarMenu.resizeModeContainer, 0, () -> onWidgetUpdate(mAttachedWindow));
         mWidgetManager.popBackHandler(mResizeBackHandler);
-        mTrayViewModel.setShouldBeVisible(!mAttachedWindow.isFullScreen());
         closeFloatingMenus();
 
         if (aResizeAction == ResizeAction.KEEP_SIZE) {
@@ -1108,26 +1096,6 @@ public class NavigationBarWidget extends UIWidget implements GeckoSession.Naviga
     @Override
     public void OnItemClicked(SuggestionsWidget.SuggestionItem item) {
         mBinding.navigationBarNavigation.urlBar.handleURLEdit(item.url);
-    }
-
-    // TrayListener
-
-    @Override
-    public void onPrivateBrowsingClicked() {
-
-    }
-
-    @Override
-    public void onLibraryClicked() {
-        if (mAttachedWindow.isResizing()) {
-            exitResizeMode(ResizeAction.RESTORE_SIZE);
-
-        } else if (mAttachedWindow.isFullScreen()) {
-            exitFullScreenMode();
-
-        } else if (mViewModel.getIsInVRVideo().getValue().get()) {
-            exitVRVideo();
-        }
     }
 
     private void finishWidgetResize() {

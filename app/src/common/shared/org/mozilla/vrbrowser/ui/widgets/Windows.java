@@ -53,7 +53,7 @@ import mozilla.components.concept.sync.TabData;
 
 import static org.mozilla.vrbrowser.ui.widgets.settings.SettingsView.SettingViewType.FXA;
 
-public class Windows implements TrayListener, TopBarWidget.Delegate, TitleBarWidget.Delegate,
+public class Windows implements TopBarWidget.Delegate, TitleBarWidget.Delegate,
         WindowWidget.WindowListener, TabsWidget.TabDelegate, Services.TabReceivedDelegate {
 
     private static final String LOGTAG = SystemUtils.createLogtag(Windows.class);
@@ -1012,58 +1012,6 @@ public class Windows implements TrayListener, TopBarWidget.Delegate, TitleBarWid
 
         }
     };
-
-    // Tray Listener
-    
-    @Override
-    public void onPrivateBrowsingClicked() {
-        if (mPrivateMode) {
-            exitPrivateMode();
-        } else {
-            enterPrivateMode();
-        }
-    }
-
-    @Override
-    public void onAddWindowClicked() {
-        WindowWidget window = addWindow();
-        if (window != null) {
-            window.loadHome();
-        }
-    }
-
-    @Override
-    public void onLibraryClicked() {
-        if (mDownloadsManager.isDownloading()) {
-            mFocusedWindow.switchPanel(Windows.DOWNLOADS);
-
-        } else {
-            mFocusedWindow.switchPanel(Windows.NONE);
-        }
-    }
-
-    @Override
-    public void onTabsClicked() {
-        if (mTabsWidget == null) {
-            mTabsWidget = new TabsWidget(mContext);
-            mTabsWidget.setTabDelegate(this);
-        }
-
-        if (mFocusedWindow != null) {
-            mTabsWidget.getPlacement().parentHandle = mFocusedWindow.getHandle();
-            mTabsWidget.attachToWindow(mFocusedWindow);
-            mTabsWidget.show(UIWidget.KEEP_FOCUS);
-            // If we're signed-in, poll for any new device events (e.g. received tabs)
-            // There's no push support right now, so this helps with the perception of speedy tab delivery.
-            ((VRBrowserApplication)mContext.getApplicationContext()).getAccounts().refreshDevicesAsync();
-            ((VRBrowserApplication)mContext.getApplicationContext()).getAccounts().pollForEventsAsync();
-        }
-
-        // Capture active session snapshots when showing the tabs menu
-        for (WindowWidget window: getCurrentWindows()) {
-            window.captureImage();
-        }
-    }
 
     private void setFirstPaint(@NonNull final WindowWidget aWindow, @NonNull final Session aSession) {
         if (aSession.getGeckoSession() == null) {
