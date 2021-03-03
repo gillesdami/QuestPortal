@@ -27,7 +27,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="10dp"
             android:tint="@drawable/suggestion_icon_color"
-            app:srcCompat="@drawable/ff_logo"
+            app:srcCompat="@drawable/qp_logo"
             android:duplicateParentState="true"/>
 
         <LinearLayout

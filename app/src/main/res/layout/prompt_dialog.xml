@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ff_logo" />
+                android:src="@drawable/qp_logo" />
         </FrameLayout>
 
         <FrameLayout

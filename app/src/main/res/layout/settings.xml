@@ -43,19 +43,19 @@
             android:focusable="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:contentDescription="Firefox logo"
+            android:contentDescription="Quest Portal logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/ff_logo_settings"
+                android:id="@+id/qp_logo_settings"
                 android:layout_width="130dp"
                 android:layout_height="84dp"
                 android:layout_gravity="center"
                 android:clickable="false"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ff_logo" />
+                android:src="@drawable/qp_logo" />
 
             <TextView
                 android:id="@+id/versionText"

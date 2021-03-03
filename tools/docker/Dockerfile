@@ -7,8 +7,6 @@
 
 FROM ubuntu:18.04
 
-MAINTAINER Randall Barker "rbarker@mozilla.com"
-
 # -- System -----------------------------------------------------------------------------
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -52,20 +50,15 @@ RUN echo y | sdkmanager "platforms;android-29" --sdk_root=$ANDROID_SDK_HOME
 WORKDIR /opt
 
 # Checkout source code
-RUN git clone https://github.com/MozillaReality/FirefoxReality.git
+RUN git clone https://github.com/gillesdami/QuestPortal.git
 
 # Build project and run gradle tasks once to pull all dependencies
-WORKDIR /opt/FirefoxReality
-RUN git config --global user.email "noreply@mozilla.com"
-RUN git config --global user.name "No Reply"
+WORKDIR /opt/QuestPortal
 RUN echo sdk.dir=/opt > local.properties && echo ndk.dir=/opt/ndk-bundle >> local.properties
-RUN git checkout -b update origin/gradle
-RUN git rebase origin/main
 RUN git submodule init
 RUN git submodule update
 RUN ./gradlew --no-daemon assembleNoapi
 RUN ./gradlew --no-daemon clean
-RUN git checkout main
 
 # -- Cleanup ----------------------------------------------------------------------------
 

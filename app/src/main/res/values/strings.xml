@@ -717,7 +717,7 @@
 
     <!-- This string labels an Allow/Don't Allow switch in the Logins And Passwords settings dialog
      and is used to enable or disable login sync with Firefox Account. If disabled the logins
-     won't be synced with the Firefox Account. -->
+     won't be synced with the  Account. -->
     <string name="security_options_login_sync">Sync logins with Firefox Accounts</string>
 
     <!-- This string labels a button in the Logins And Passwords settings dialog

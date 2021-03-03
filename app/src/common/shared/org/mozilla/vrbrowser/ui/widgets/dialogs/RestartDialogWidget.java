@@ -37,7 +37,7 @@ public class RestartDialogWidget extends PromptDialogWidget {
         setCheckboxVisible(false);
         setDescriptionVisible(false);
 
-        setIcon(R.drawable.ff_logo);
+        setIcon(R.drawable.qp_logo);
         setTitle(R.string.restart_dialog_restart);
         setBody(getContext().getString(R.string.restart_dialog_text, getContext().getString(R.string.app_name)));
     }
