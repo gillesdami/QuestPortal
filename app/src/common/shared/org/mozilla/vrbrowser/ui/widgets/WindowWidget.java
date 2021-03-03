@@ -639,10 +639,8 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
                 session.getTextInput().setView(this);
             }
             mSession.updateLastUse();
-            mWidgetManager.getNavigationBar().addNavigationBarListener(mNavigationBarListener);
 
         } else {
-            mWidgetManager.getNavigationBar().removeNavigationBarListener(mNavigationBarListener);
             updateBookmarked();
 
         }
@@ -963,7 +961,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
             mTexture.release();
             mTexture = null;
         }
-        mWidgetManager.getNavigationBar().removeNavigationBarListener(mNavigationBarListener);
         SessionStore.get().getBookmarkStore().removeListener(mBookmarksListener);
         mPromptDelegate.detachFromWindow();
         super.releaseWidget();

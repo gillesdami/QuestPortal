@@ -474,7 +474,6 @@ public class KeyboardWidget extends UIWidget implements CustomKeyboardView.OnKey
                 handleShowKeyboard(mCurrentKeyboard.getAlphabeticKeyboard());
             } else {
                 mWidgetManager.popBackHandler(mBackHandler);
-                mWidgetManager.keyboardDismissed();
             }
             getPlacement().visible = showKeyboard;
             mWidgetManager.updateWidget(this);

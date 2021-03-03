@@ -168,7 +168,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     Windows mWindows;
     RootWidget mRootWidget;
     KeyboardWidget mKeyboard;
-    NavigationBarWidget mNavigationBar;
     CrashDialogWidget mCrashDialog;
     TrayWidget mTray;
     WhatsNewWidget mWhatsNewWidget = null;
@@ -321,9 +320,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
             }
         });
 
-        // Create Browser navigation widget
-        mNavigationBar = new NavigationBarWidget(this);
-
         // Create keyboard widget
         mKeyboard = new KeyboardWidget(this);
 
@@ -337,7 +333,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
             public void onFocusedWindowChanged(@NonNull WindowWidget aFocusedWindow, @Nullable WindowWidget aPrevFocusedWindow) {
                 attachToWindow(aFocusedWindow, aPrevFocusedWindow);
                 mTray.setAddWindowVisible(mWindows.canOpenNewWindow());
-                mNavigationBar.hideAllNotifications();
             }
             @Override
             public void onWindowBorderChanged(@NonNull WindowWidget aChangeWindow) {
@@ -346,14 +341,12 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
 
             @Override
             public void onWindowsMoved() {
-                mNavigationBar.hideAllNotifications();
                 updateWidget(mTray);
             }
 
             @Override
             public void onWindowClosed() {
                 mTray.setAddWindowVisible(mWindows.canOpenNewWindow());
-                mNavigationBar.hideAllNotifications();
                 updateWidget(mTray);
             }
 
@@ -372,7 +365,7 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
         mTray.setAddWindowVisible(mWindows.canOpenNewWindow());
         attachToWindow(mWindows.getFocusedWindow(), null);
 
-        addWidgets(Arrays.asList(mRootWidget, mNavigationBar, mKeyboard, mTray, mWebXRInterstitial));
+        addWidgets(Arrays.asList(mRootWidget, mKeyboard, mTray, mWebXRInterstitial));
 
         // Show the what's upp dialog if we haven't showed it yet and this is v6.
         if (!SettingsStore.getInstance(this).isWhatsNewDisplayed()) {
@@ -387,12 +380,10 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
 
     private void attachToWindow(@NonNull WindowWidget aWindow, @Nullable WindowWidget aPrevWindow) {
         mPermissionDelegate.setParentWidgetHandle(aWindow.getHandle());
-        mNavigationBar.attachToWindow(aWindow);
         mKeyboard.attachToWindow(aWindow);
         mTray.attachToWindow(aWindow);
 
         if (aPrevWindow != null) {
-            updateWidget(mNavigationBar);
             updateWidget(mKeyboard);
             updateWidget(mTray);
         }
@@ -1564,11 +1555,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     }
 
     @Override
-    public void keyboardDismissed() {
-        mNavigationBar.showVoiceSearch();
-    }
-
-    @Override
     public void updateEnvironment() {
         queueRunnable(this::updateEnvironmentNative);
     }
@@ -1667,11 +1653,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     @Override
     public TrayWidget getTray() {
         return mTray;
-    }
-
-    @Override
-    public NavigationBarWidget getNavigationBar() {
-        return mNavigationBar;
     }
 
     @Override

@@ -1488,10 +1488,7 @@ public void selectTab(@NonNull Session aTab) {
     };
 
     public void showTabAddedNotification() {
-        if (mFocusedWindow.isFullScreen()) {
-            mWidgetManager.getNavigationBar().showTabAddedNotification();
-
-        } else {
+        if (!mFocusedWindow.isFullScreen()) {
             if (mWidgetManager.getTray().isVisible()) {
                 mWidgetManager.getTray().showTabAddedNotification();
 
@@ -1507,10 +1504,7 @@ public void selectTab(@NonNull Session aTab) {
     }
 
     public void showTabSentNotification() {
-        if (mFocusedWindow.isFullScreen()) {
-            mWidgetManager.getNavigationBar().showTabSentNotification();
-
-        } else {
+        if (!mFocusedWindow.isFullScreen()) {
             if (mWidgetManager.getTray().isVisible()) {
                 mWidgetManager.getTray().showTabSentNotification();
 
@@ -1525,10 +1519,7 @@ public void selectTab(@NonNull Session aTab) {
     }
 
     public void showBookmarkAddedNotification() {
-        if (mFocusedWindow.isFullScreen()) {
-            mWidgetManager.getNavigationBar().showBookmarkAddedNotification();
-
-        } else {
+        if (!mFocusedWindow.isFullScreen()) {
             if (mWidgetManager.getTray().isVisible()) {
                 mWidgetManager.getTray().showBookmarkAddedNotification();
 

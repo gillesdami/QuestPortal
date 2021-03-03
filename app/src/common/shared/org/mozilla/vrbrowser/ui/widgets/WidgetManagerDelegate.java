@@ -80,7 +80,6 @@ public interface WidgetManagerDelegate {
     void setControllersVisible(boolean visible);
     void setWindowSize(float targetWidth, float targetHeight);
     void setIsServoSession(boolean aIsServo);
-    void keyboardDismissed();
     void updateEnvironment();
     void updatePointerColor();
     void showVRVideo(int aWindowHandle, @VideoProjectionMenuWidget.VideoProjectionFlags int aVideoProjection);
@@ -107,7 +106,6 @@ public interface WidgetManagerDelegate {
     void openNewTabForeground(@NonNull String uri);
     WindowWidget getFocusedWindow();
     TrayWidget getTray();
-    NavigationBarWidget getNavigationBar();
     Windows getWindows();
     void saveState();
     void updateLocale(@NonNull Context context);
