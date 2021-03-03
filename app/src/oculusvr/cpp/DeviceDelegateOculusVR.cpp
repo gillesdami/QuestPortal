@@ -1388,7 +1388,9 @@ DeviceDelegateOculusVR::EnterVR(const crow::BrowserEGLContext& aEGLContext) {
 
   // Reset reorientation after Enter VR
   m.reorientMatrix = vrb::Matrix::Identity();
-  vrapi_SetRemoteEmulation(m.ovr, true);
+  // oculus-developer-release-notes-v19
+  // The vrapi_SetRemoteEmulation function has been removed from the API and should no longer be used.
+  // vrapi_SetRemoteEmulation(m.ovr, true);
 }
 
 void
