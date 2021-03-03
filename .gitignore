@@ -79,3 +79,6 @@ app/schemas/
 
 # Token files
 .mls_token
+
+# Test apps
+app/src/main/assets/app
