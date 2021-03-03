@@ -234,9 +234,6 @@ public class SettingsWidget extends UIDialog implements SettingsView.Delegate {
         mBinding.whatsNewButton.setOnClickListener(v -> {
             SettingsStore.getInstance(getContext()).setRemotePropsVersionName(BuildConfig.VERSION_NAME);
             RemoteProperties props = mSettingsViewModel.getProps().getValue().get(BuildConfig.VERSION_NAME);
-            if (props != null) {
-                mWidgetManager.openNewTabForeground(props.getWhatsNewUrl());
-            }
             onDismiss();
         });
 

@@ -32,7 +32,6 @@ public class SettingsViewModel extends AndroidViewModel {
     private MutableLiveData<ObservableBoolean> isWebXREnabled;
     private MutableLiveData<String> propsVersionName;
     private MutableLiveData<Map<String, RemoteProperties>> props;
-    private MutableLiveData<ObservableBoolean> isWhatsNewVisible;
 
     public SettingsViewModel(@NonNull Application application) {
         super(application);
@@ -43,10 +42,6 @@ public class SettingsViewModel extends AndroidViewModel {
         isWebXREnabled = new MutableLiveData<>(new ObservableBoolean(false));
         propsVersionName = new MutableLiveData<>();
         props = new MutableLiveData<>(Collections.emptyMap());
-        isWhatsNewVisible = new MutableLiveData<>(new ObservableBoolean(false));
-
-        propsVersionName.observeForever(props -> isWhatsNewVisible());
-        props.observeForever(versionName -> isWhatsNewVisible());
     }
 
     public void refresh() {
@@ -65,13 +60,6 @@ public class SettingsViewModel extends AndroidViewModel {
 
         String appVersionName = SettingsStore.getInstance(getApplication().getBaseContext()).getRemotePropsVersionName();
         propsVersionName.postValue(appVersionName);
-    }
-
-    private void isWhatsNewVisible() {
-        boolean value = props.getValue() != null &&
-                !BuildConfig.VERSION_NAME.equals(propsVersionName.getValue()) &&
-                props.getValue().containsKey(BuildConfig.VERSION_NAME);
-        isWhatsNewVisible.postValue(new ObservableBoolean(value));
     }
 
     public void setIsTrackingProtectionEnabled(boolean isEnabled) {
@@ -128,9 +116,4 @@ public class SettingsViewModel extends AndroidViewModel {
     public MutableLiveData<Map<String, RemoteProperties>> getProps() {
         return props;
     }
-
-    public MutableLiveData<ObservableBoolean> getIsWhatsNewVisible() {
-        return isWhatsNewVisible;
-    }
-
 }

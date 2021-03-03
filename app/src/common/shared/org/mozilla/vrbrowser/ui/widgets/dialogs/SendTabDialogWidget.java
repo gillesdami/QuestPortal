@@ -45,7 +45,6 @@ public class SendTabDialogWidget extends SettingDialogWidget implements
     private SendTabsDisplayBinding mSendTabsDialogBinding;
     private Accounts mAccounts;
     private List<Device> mDevicesList = new ArrayList<>();
-    private WhatsNewWidget mWhatsNew;
     private String mSessionId;
 
     public static SendTabDialogWidget getInstance(@NonNull Context context) {
@@ -114,8 +113,6 @@ public class SendTabDialogWidget extends SettingDialogWidget implements
 
             super.show(aShowFlags);
 
-        } else {
-            showWhatsNewDialog();
         }
     }
 
@@ -145,12 +142,6 @@ public class SendTabDialogWidget extends SettingDialogWidget implements
         mWidgetManager.getWindows().showTabSentNotification();
 
         onDismiss();
-    }
-
-    private void showWhatsNewDialog() {
-        mWhatsNew = new WhatsNewWidget(getContext());
-        mWhatsNew.setLoginOrigin(Accounts.LoginOrigin.SEND_TABS);
-        mWhatsNew.show(UIWidget.REQUEST_FOCUS);
     }
 
     // DeviceConstellationObserver
@@ -186,7 +177,6 @@ public class SendTabDialogWidget extends SettingDialogWidget implements
         if (isVisible()) {
             hide(KEEP_WIDGET);
         }
-        showWhatsNewDialog();
     }
 
     @Override
@@ -206,6 +196,5 @@ public class SendTabDialogWidget extends SettingDialogWidget implements
         if (isVisible()) {
             hide(KEEP_WIDGET);
         }
-        showWhatsNewDialog();
     }
 }

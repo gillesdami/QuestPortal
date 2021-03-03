@@ -81,8 +81,7 @@
             android:layout_weight="1"
             android:layout_marginStart="10dp"
             android:scaleType="fitCenter"
-            android:layout_gravity="center_vertical"
-            app:visibleGone="@{settingsmodel.isWhatsNewVisible &amp;&amp; viewmodel.width > 640}">
+            android:layout_gravity="center_vertical">
             <org.mozilla.vrbrowser.ui.views.UIButton
                 android:id="@+id/whatsNew"
                 style="?attr/navigationBarButtonStyle"
