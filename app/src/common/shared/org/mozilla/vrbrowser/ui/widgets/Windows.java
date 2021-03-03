@@ -195,14 +195,12 @@ public class Windows implements TrayListener, TopBarWidget.Delegate, TitleBarWid
         mDownloadsManager = mWidgetManager.getServicesProvider().getDownloadsManager();
 
         mIsRestoreEnabled = SettingsStore.getInstance(mContext).isRestoreTabsEnabled();
-        // mWindowsState = restoreState();
-        // restoreWindows();
 
         if (getCurrentWindows().size() == 0) {
             WindowWidget window = addWindow();
-            window.getSession().loadUri(UrlUtils.ABOUT_HISTORY);
             focusWindow(window);
         }
+
         updateMaxWindowScales();
         updateViews();
     }

@@ -248,7 +248,7 @@ public class SettingsStore {
 
     public boolean isRemoteDebuggingEnabled() {
         return mPrefs.getBoolean(
-                mContext.getString(R.string.settings_key_remote_debugging), REMOTE_DEBUGGING_DEFAULT);
+                mContext.getString(R.string.settings_key_remote_debugging), mContext.getResources().getBoolean(R.bool.remote_debugging_enabled));
     }
 
     public void setRemoteDebuggingEnabled(boolean isEnabled) {
