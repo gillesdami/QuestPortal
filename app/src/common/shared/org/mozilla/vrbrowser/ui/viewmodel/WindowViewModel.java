@@ -38,7 +38,6 @@ public class WindowViewModel extends AndroidViewModel {
     private MutableLiveData<Windows.WindowPlacement> placement;
     private MutableLiveData<ObservableBoolean> isOnlyWindow;
     private MutableLiveData<ObservableBoolean> isFullscreen;
-    private MediatorLiveData<ObservableBoolean> isTopBarVisible;
     private MutableLiveData<ObservableBoolean> isResizeMode;
     private MutableLiveData<ObservableBoolean> isPrivateSession;
     private MediatorLiveData<ObservableBoolean> showClearButton;
@@ -90,14 +89,6 @@ public class WindowViewModel extends AndroidViewModel {
         isFullscreen = new MutableLiveData<>(new ObservableBoolean(false));
         isResizeMode = new MutableLiveData<>(new ObservableBoolean(false));
         isPrivateSession = new MutableLiveData<>(new ObservableBoolean(false));
-
-        isTopBarVisible = new MediatorLiveData<>();
-        isTopBarVisible.addSource(isOnlyWindow, mIsTopBarVisibleObserver);
-        isTopBarVisible.addSource(isFullscreen, mIsTopBarVisibleObserver);
-        isTopBarVisible.addSource(isResizeMode, mIsTopBarVisibleObserver);
-        isTopBarVisible.addSource(isPrivateSession, mIsTopBarVisibleObserver);
-        isTopBarVisible.addSource(isWindowVisible, mIsTopBarVisibleObserver);
-        isTopBarVisible.setValue(new ObservableBoolean(true));
 
         showClearButton = new MediatorLiveData<>();
         showClearButton.addSource(isOnlyWindow, mShowClearButtonObserver);
@@ -176,23 +167,6 @@ public class WindowViewModel extends AndroidViewModel {
         mWidth = new MutableLiveData<>(new ObservableInt());
         mHeight = new MutableLiveData<>(new ObservableInt());
     }
-
-    private Observer<ObservableBoolean> mIsTopBarVisibleObserver = new Observer<ObservableBoolean>() {
-        @Override
-        public void onChanged(ObservableBoolean o) {
-            if (isFullscreen.getValue().get() || isResizeMode.getValue().get() || !isWindowVisible.getValue().get()) {
-                isTopBarVisible.postValue(new ObservableBoolean(false));
-
-            } else {
-                if (isOnlyWindow.getValue().get()) {
-                    isTopBarVisible.postValue(new ObservableBoolean(isPrivateSession.getValue().get()));
-
-                } else {
-                    isTopBarVisible.postValue(new ObservableBoolean(true));
-                }
-            }
-        }
-    };
 
     private Observer<ObservableBoolean> mShowClearButtonObserver = new Observer<ObservableBoolean>() {
         @Override
@@ -468,15 +442,6 @@ public class WindowViewModel extends AndroidViewModel {
 
     public void setIsFullscreen(boolean isFullscreen) {
         this.isFullscreen.postValue(new ObservableBoolean(isFullscreen));
-    }
-
-    @NonNull
-    public MediatorLiveData<ObservableBoolean> getIsTopBarVisible() {
-        return isTopBarVisible;
-    }
-
-    public void setIsTopBarVisible(boolean isTopBarVisible) {
-        this.isTopBarVisible.postValue(new ObservableBoolean(isTopBarVisible));
     }
 
     @NonNull

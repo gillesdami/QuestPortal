@@ -102,7 +102,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
     private int mWidth;
     private int mHeight;
     private int mHandle;
-    private TopBarWidget mTopBar;
     private TitleBarWidget mTitleBar;
     private WidgetManagerDelegate mWidgetManager;
     private PromptDialogWidget mAlertDialog;
@@ -208,9 +207,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
         } else {
             mWidgetPlacement.clearColor = ViewUtils.ARGBtoRGBA(getContext().getColor(R.color.window_blank_clear_color));
         }
-
-        mTopBar = new TopBarWidget(aContext);
-        mTopBar.attachToWindow(this);
 
         mTitleBar = new TitleBarWidget(aContext);
         mTitleBar.attachToWindow(this);
@@ -349,13 +345,8 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
         hideContextMenus();
         releaseWidget();
         mLibrary.onDestroy();
-        mViewModel.setIsTopBarVisible(false);
         mViewModel.setIsTitleBarVisible(false);
         SessionStore.get().destroySession(mSession);
-        if (mTopBar != null) {
-            mWidgetManager.removeWidget(mTopBar);
-            mTopBar.setDelegate((TopBarWidget.Delegate) null);
-        }
         if (mTitleBar != null) {
             mWidgetManager.removeWidget(mTitleBar);
             mTitleBar.setDelegate((TitleBarWidget.Delegate) null);
@@ -666,17 +657,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
     @Nullable
     public Session getSession() {
         return mSession;
-    }
-
-    public TopBarWidget getTopBar() {
-        return mTopBar;
-    }
-
-    public void setTopBar(TopBarWidget aWidget) {
-        if (mTopBar != aWidget) {
-            mTopBar = aWidget;
-            mTopBar.attachToWindow(this);
-        }
     }
 
     public void setResizeMode(boolean resizing) {

@@ -53,7 +53,7 @@ import mozilla.components.concept.sync.TabData;
 
 import static org.mozilla.vrbrowser.ui.widgets.settings.SettingsView.SettingViewType.FXA;
 
-public class Windows implements TopBarWidget.Delegate, TitleBarWidget.Delegate,
+public class Windows implements TitleBarWidget.Delegate,
         WindowWidget.WindowListener, TabsWidget.TabDelegate, Services.TabReceivedDelegate {
 
     private static final String LOGTAG = SystemUtils.createLogtag(Windows.class);
@@ -420,14 +420,11 @@ public class Windows implements TopBarWidget.Delegate, TitleBarWidget.Delegate,
         if (aWindow == leftWindow && frontWindow != null) {
             placeWindow(leftWindow, WindowPlacement.FRONT);
             placeWindow(frontWindow, WindowPlacement.LEFT);
-            switchTopBars(leftWindow, frontWindow);
         } else if (aWindow == frontWindow) {
             if (rightWindow != null) {
                 placeWindow(rightWindow, WindowPlacement.FRONT);
-                switchTopBars(rightWindow, frontWindow);
             } else if (leftWindow != null) {
                 placeWindow(leftWindow, WindowPlacement.FRONT);
-                switchTopBars(leftWindow, frontWindow);
             }
             placeWindow(frontWindow, WindowPlacement.RIGHT);
         }
@@ -445,14 +442,11 @@ public class Windows implements TopBarWidget.Delegate, TitleBarWidget.Delegate,
         if (aWindow == rightWindow && frontWindow != null) {
             placeWindow(rightWindow, WindowPlacement.FRONT);
             placeWindow(frontWindow, WindowPlacement.RIGHT);
-            switchTopBars(rightWindow, frontWindow);
         } else if (aWindow == frontWindow) {
             if (leftWindow != null) {
                 placeWindow(leftWindow, WindowPlacement.FRONT);
-                switchTopBars(leftWindow, frontWindow);
             } else if (rightWindow != null) {
                 placeWindow(rightWindow, WindowPlacement.FRONT);
-                switchTopBars(rightWindow, frontWindow);
             }
             placeWindow(frontWindow, WindowPlacement.LEFT);
         }
@@ -796,7 +790,6 @@ public class Windows implements TopBarWidget.Delegate, TitleBarWidget.Delegate,
         if (aWindow != mFocusedWindow) {
             aWindow.getTitleBar().setVisible(aVisible);
         }
-        aWindow.getTopBar().setVisible(aVisible);
     }
 
     private void placeWindow(@NonNull WindowWidget aWindow, WindowPlacement aPosition) {
@@ -892,15 +885,6 @@ public class Windows implements TopBarWidget.Delegate, TitleBarWidget.Delegate,
         return getWindowsCount() < MAX_WINDOWS;
     }
 
-    private void switchTopBars(WindowWidget w1, WindowWidget w2) {
-        // Used to fix a minor visual glitch.
-        // See https://github.com/MozillaReality/FirefoxReality/issues/1722
-        TopBarWidget bar1 = w1.getTopBar();
-        TopBarWidget bar2 = w2.getTopBar();
-        w1.setTopBar(bar2);
-        w2.setTopBar(bar1);
-    }
-
     private void updateViews() {
         WindowWidget frontWindow = getFrontWindow();
         WindowWidget leftWindow = getLeftWindow();
@@ -925,7 +909,6 @@ public class Windows implements TopBarWidget.Delegate, TitleBarWidget.Delegate,
         windows.sort((o1, o2) -> o1 == frontWindow ? -1 : 0);
         for (WindowWidget window: getCurrentWindows()) {
             mWidgetManager.updateWidget(window);
-            mWidgetManager.updateWidget(window.getTopBar());
             mWidgetManager.updateWidget(window.getTitleBar());
         }
     }
@@ -942,7 +925,6 @@ public class Windows implements TopBarWidget.Delegate, TitleBarWidget.Delegate,
 
         window.addWindowListener(this);
         getCurrentWindows().add(window);
-        window.getTopBar().setDelegate(this);
         window.getTitleBar().setDelegate(this);
 
         if (mPrivateMode) {
@@ -1021,34 +1003,6 @@ public class Windows implements TopBarWidget.Delegate, TitleBarWidget.Delegate,
             // So trigger the first paint callback in case the window is grayed out
             // waiting for the first paint event.
             aWindow.onFirstContentfulPaint(aSession.getGeckoSession());
-        }
-    }
-
-    // TopBarWidget Delegate
-    @Override
-    public void onCloseClicked(TopBarWidget aWidget) {
-        WindowWidget window = aWidget.getAttachedWindow();
-        if (window != null) {
-            closeWindow(window);
-        }
-    }
-
-    @Override
-    public void onMoveLeftClicked(TopBarWidget aWidget) {
-        WindowWidget window = aWidget.getAttachedWindow();
-        if (window != null) {
-            GleanMetricsService.windowsMoveEvent();
-            moveWindowLeft(window);
-        }
-    }
-
-    @Override
-    public void onMoveRightClicked(TopBarWidget aWidget) {
-        WindowWidget window = aWidget.getAttachedWindow();
-        if (window != null) {
-            GleanMetricsService.windowsMoveEvent();
-
-            moveWindowRight(window);
         }
     }
 
