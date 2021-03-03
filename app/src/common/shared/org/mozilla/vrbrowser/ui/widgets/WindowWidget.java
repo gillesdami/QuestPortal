@@ -1414,33 +1414,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
         return (int) Math.floor(SettingsStore.WINDOW_WIDTH_DEFAULT * aWorldWidth / WidgetPlacement.floatDimension(getContext(), R.dimen.window_world_width));
     }
 
-    private NavigationBarWidget.NavigationListener mNavigationBarListener = new NavigationBarWidget.NavigationListener() {
-        @Override
-        public void onBack() {
-            hideLibraryPanel();
-        }
-
-        @Override
-        public void onForward() {
-            hideLibraryPanel();
-        }
-
-        @Override
-        public void onReload() {
-            hideLibraryPanel();
-        }
-
-        @Override
-        public void onStop() {
-            // Nothing to do
-        }
-
-        @Override
-        public void onHome() {
-            hideLibraryPanel();
-        }
-    };
-
     private BookmarksStore.BookmarkListener mBookmarksListener = new BookmarksStore.BookmarkListener() {
         @Override
         public void onBookmarksUpdated() {
