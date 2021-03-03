@@ -56,7 +56,6 @@ public class SignOutDialogWidget extends PromptDialogWidget {
                             mPlaces.clear();
                         }
                         hide(UIWidget.REMOVE_WIDGET);
-                        mWidgetManager.getTray().toggleSettingsDialog();
 
                     }, mUIThreadExecutor);
 
@@ -66,10 +65,8 @@ public class SignOutDialogWidget extends PromptDialogWidget {
 
             } else if (index == PromptDialogWidget.POSITIVE) {
                 hide(UIWidget.REMOVE_WIDGET);
-                mWidgetManager.getTray().toggleSettingsDialog(FXA);
             }
         });
-        setDelegate(() -> mWidgetManager.getTray().toggleSettingsDialog(FXA));
 
         setDescriptionVisible(false);
 

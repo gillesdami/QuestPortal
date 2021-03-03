@@ -254,7 +254,6 @@ public class BookmarksView extends LibraryView implements BookmarksStore.Bookmar
         @Override
         public void onFxASynSettings(@NonNull View view) {
             view.requestFocusFromTouch();
-            mWidgetManager.getTray().showSettingsDialog(FXA);
         }
 
         @Override

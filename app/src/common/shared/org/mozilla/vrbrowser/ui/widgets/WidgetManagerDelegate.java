@@ -105,7 +105,6 @@ public interface WidgetManagerDelegate {
     void openNewTab(@NonNull String uri);
     void openNewTabForeground(@NonNull String uri);
     WindowWidget getFocusedWindow();
-    TrayWidget getTray();
     Windows getWindows();
     void saveState();
     void updateLocale(@NonNull Context context);

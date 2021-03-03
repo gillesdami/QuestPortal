@@ -1034,10 +1034,6 @@ public class Windows implements TrayListener, TopBarWidget.Delegate, TitleBarWid
                     case HISTORY:
                         mFocusedWindow.getSession().loadUri(UrlUtils.ABOUT_HISTORY);
                         break;
-
-                    case SETTINGS:
-                        mWidgetManager.getTray().showSettingsDialog(FXA);
-                        break;
                 }
             }
         }
@@ -1054,7 +1050,7 @@ public class Windows implements TrayListener, TopBarWidget.Delegate, TitleBarWid
     };
 
     // Tray Listener
-
+    
     @Override
     public void onPrivateBrowsingClicked() {
         if (mPrivateMode) {
@@ -1489,47 +1485,32 @@ public void selectTab(@NonNull Session aTab) {
 
     public void showTabAddedNotification() {
         if (!mFocusedWindow.isFullScreen()) {
-            if (mWidgetManager.getTray().isVisible()) {
-                mWidgetManager.getTray().showTabAddedNotification();
-
-            } else {
-                NotificationManager.Notification notification = new NotificationManager.Builder(mFocusedWindow)
-                        .withString(R.string.tab_added_notification)
-                        .withZTranslation(25.0f)
-                        .withCurved(true).build();
-                NotificationManager.show(TAB_ADDED_NOTIFICATION_ID, notification);
-            }
+            NotificationManager.Notification notification = new NotificationManager.Builder(mFocusedWindow)
+                    .withString(R.string.tab_added_notification)
+                    .withZTranslation(25.0f)
+                    .withCurved(true).build();
+            NotificationManager.show(TAB_ADDED_NOTIFICATION_ID, notification);
         }
 
     }
 
     public void showTabSentNotification() {
         if (!mFocusedWindow.isFullScreen()) {
-            if (mWidgetManager.getTray().isVisible()) {
-                mWidgetManager.getTray().showTabSentNotification();
-
-            } else {
-                NotificationManager.Notification notification = new NotificationManager.Builder(mFocusedWindow)
-                        .withString(R.string.tab_sent_notification)
-                        .withZTranslation(25.0f)
-                        .withCurved(true).build();
-                NotificationManager.show(TAB_SENT_NOTIFICATION_ID, notification);
-            }
+            NotificationManager.Notification notification = new NotificationManager.Builder(mFocusedWindow)
+                    .withString(R.string.tab_sent_notification)
+                    .withZTranslation(25.0f)
+                    .withCurved(true).build();
+            NotificationManager.show(TAB_SENT_NOTIFICATION_ID, notification);
         }
     }
 
     public void showBookmarkAddedNotification() {
         if (!mFocusedWindow.isFullScreen()) {
-            if (mWidgetManager.getTray().isVisible()) {
-                mWidgetManager.getTray().showBookmarkAddedNotification();
-
-            } else {
-                NotificationManager.Notification notification = new NotificationManager.Builder(mFocusedWindow)
-                        .withString(R.string.bookmarks_saved_notification)
-                        .withZTranslation(25.0f)
-                        .withCurved(true).build();
-                NotificationManager.show(BOOKMARK_ADDED_NOTIFICATION_ID, notification);
-            }
+            NotificationManager.Notification notification = new NotificationManager.Builder(mFocusedWindow)
+                    .withString(R.string.bookmarks_saved_notification)
+                    .withZTranslation(25.0f)
+                    .withCurved(true).build();
+            NotificationManager.show(BOOKMARK_ADDED_NOTIFICATION_ID, notification);
         }
     }
 

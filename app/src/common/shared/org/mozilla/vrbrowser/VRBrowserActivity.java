@@ -169,7 +169,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     RootWidget mRootWidget;
     KeyboardWidget mKeyboard;
     CrashDialogWidget mCrashDialog;
-    TrayWidget mTray;
     WhatsNewWidget mWhatsNewWidget = null;
     WebXRInterstitialWidget mWebXRInterstitial;
     PermissionDelegate mPermissionDelegate;
@@ -332,7 +331,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
             @Override
             public void onFocusedWindowChanged(@NonNull WindowWidget aFocusedWindow, @Nullable WindowWidget aPrevFocusedWindow) {
                 attachToWindow(aFocusedWindow, aPrevFocusedWindow);
-                mTray.setAddWindowVisible(mWindows.canOpenNewWindow());
             }
             @Override
             public void onWindowBorderChanged(@NonNull WindowWidget aChangeWindow) {
@@ -340,15 +338,10 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
             }
 
             @Override
-            public void onWindowsMoved() {
-                updateWidget(mTray);
-            }
+            public void onWindowsMoved() {}
 
             @Override
-            public void onWindowClosed() {
-                mTray.setAddWindowVisible(mWindows.canOpenNewWindow());
-                updateWidget(mTray);
-            }
+            public void onWindowClosed() {}
 
             @Override
             public void onWindowVideoAvailabilityChanged(@NonNull WindowWidget aWindow) {
@@ -359,13 +352,9 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
             }
         });
 
-        // Create the tray
-        mTray = new TrayWidget(this);
-        mTray.addListeners(mWindows);
-        mTray.setAddWindowVisible(mWindows.canOpenNewWindow());
         attachToWindow(mWindows.getFocusedWindow(), null);
 
-        addWidgets(Arrays.asList(mRootWidget, mKeyboard, mTray, mWebXRInterstitial));
+        addWidgets(Arrays.asList(mRootWidget, mKeyboard, mWebXRInterstitial));
 
         // Show the what's upp dialog if we haven't showed it yet and this is v6.
         if (!SettingsStore.getInstance(this).isWhatsNewDisplayed()) {
@@ -381,11 +370,9 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     private void attachToWindow(@NonNull WindowWidget aWindow, @Nullable WindowWidget aPrevWindow) {
         mPermissionDelegate.setParentWidgetHandle(aWindow.getHandle());
         mKeyboard.attachToWindow(aWindow);
-        mTray.attachToWindow(aWindow);
 
         if (aPrevWindow != null) {
             updateWidget(mKeyboard);
-            updateWidget(mTray);
         }
     }
 
@@ -394,11 +381,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
         SettingsStore.getInstance(getBaseContext()).setPid(Process.myPid());
         super.onStart();
         mLifeCycle.setCurrentState(Lifecycle.State.STARTED);
-        if (mTray == null) {
-            Log.e(LOGTAG, "Failed to start Tray clock");
-        } else {
-            mTray.start(this);
-        }
     }
 
     @Override
@@ -406,9 +388,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
         SettingsStore.getInstance(getBaseContext()).setPid(0);
         super.onStop();
         GleanMetricsService.sessionStop();
-        if (mTray != null) {
-            mTray.stop(this);
-        }
     }
 
     public void flushBackHandlers() {
@@ -495,8 +474,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
         if (mPermissionDelegate != null) {
             mPermissionDelegate.release();
         }
-
-        mTray.removeListeners(mWindows);
 
         // Remove all widget listeners
         mWindows.onDestroy();
@@ -1232,7 +1209,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
         Intent intent = this.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int plugged = intent == null ? -1 : intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
         boolean isCharging = plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB || plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS;
-        mTray.setBatteryLevels(battery, isCharging, leftLevel, rightLevel);
     }
 
     private SurfaceTexture createSurfaceTexture() {
@@ -1648,11 +1624,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     @Override
     public WindowWidget getFocusedWindow() {
         return mWindows.getFocusedWindow();
-    }
-
-    @Override
-    public TrayWidget getTray() {
-        return mTray;
     }
 
     @Override

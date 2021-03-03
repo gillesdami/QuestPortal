@@ -354,7 +354,6 @@ public class PromptDelegate implements
                 @Override
                 public void onSettingsClicked() {
                     result.complete(autocompleteRequest.dismiss());
-                    mWidgetManager.getTray().toggleSettingsDialog(SettingsView.SettingViewType.LOGINS_AND_PASSWORDS);
                 }
             });
             mSelectLoginPrompt.setItems(logins);

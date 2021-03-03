@@ -261,7 +261,6 @@ public class HistoryView extends LibraryView implements HistoryStore.HistoryList
         @Override
         public void onFxASynSettings(@NonNull View view) {
             view.requestFocusFromTouch();
-            mWidgetManager.getTray().showSettingsDialog(FXA);
         }
 
         @Override
