@@ -77,7 +77,6 @@ import org.mozilla.vrbrowser.ui.widgets.Windows;
 import org.mozilla.vrbrowser.ui.widgets.dialogs.CrashDialogWidget;
 import org.mozilla.vrbrowser.ui.widgets.dialogs.PromptDialogWidget;
 import org.mozilla.vrbrowser.ui.widgets.dialogs.SendTabDialogWidget;
-import org.mozilla.vrbrowser.ui.widgets.dialogs.WhatsNewWidget;
 import org.mozilla.vrbrowser.ui.widgets.menus.VideoProjectionMenuWidget;
 import org.mozilla.vrbrowser.utils.BitmapCache;
 import org.mozilla.vrbrowser.utils.ConnectivityReceiver;
@@ -169,7 +168,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     RootWidget mRootWidget;
     KeyboardWidget mKeyboard;
     CrashDialogWidget mCrashDialog;
-    WhatsNewWidget mWhatsNewWidget = null;
     WebXRInterstitialWidget mWebXRInterstitial;
     PermissionDelegate mPermissionDelegate;
     LinkedList<UpdateListener> mWidgetUpdateListeners;
@@ -356,14 +354,7 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
 
         addWidgets(Arrays.asList(mRootWidget, mKeyboard, mWebXRInterstitial));
 
-        // Show the what's upp dialog if we haven't showed it yet and this is v6.
-        if (!SettingsStore.getInstance(this).isWhatsNewDisplayed()) {
-            mWhatsNewWidget = new WhatsNewWidget(this);
-            mWhatsNewWidget.setLoginOrigin(Accounts.LoginOrigin.NONE);
-            mWhatsNewWidget.getPlacement().parentHandle = mWindows.getFocusedWindow().getHandle();
-            mWhatsNewWidget.show(UIWidget.REQUEST_FOCUS);
-        }
-
+        // TODO Cleanup
         mWindows.restoreSessions();
     }
 
@@ -583,13 +574,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
                 mHideWebXRIntersitial = extras.getBoolean("hide_webxr_interstitial", false);
                 if (mHideWebXRIntersitial) {
                     setWebXRIntersitialState(WEBXR_INTERSTITIAL_HIDDEN);
-                }
-            }
-
-            if (extras.containsKey("hide_whats_new")) {
-                boolean hideWhatsNew = extras.getBoolean("hide_whats_new", false);
-                if (hideWhatsNew && mWhatsNewWidget != null) {
-                    mWhatsNewWidget.hide(REMOVE_WIDGET);
                 }
             }
         }

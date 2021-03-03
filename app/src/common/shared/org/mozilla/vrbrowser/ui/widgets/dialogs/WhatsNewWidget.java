@@ -70,8 +70,6 @@ public class WhatsNewWidget extends PromptDialogWidget {
     @Override
     public void hide(@HideFlags int aHideFlags) {
         super.hide(aHideFlags);
-
-        SettingsStore.getInstance(getContext()).setWhatsNewDisplayed(true);
     }
 
     private void signIn() {
