@@ -102,7 +102,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
     private int mWidth;
     private int mHeight;
     private int mHandle;
-    private TitleBarWidget mTitleBar;
     private WidgetManagerDelegate mWidgetManager;
     private PromptDialogWidget mAlertDialog;
     private PromptDialogWidget mConfirmDialog;
@@ -207,9 +206,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
         } else {
             mWidgetPlacement.clearColor = ViewUtils.ARGBtoRGBA(getContext().getColor(R.color.window_blank_clear_color));
         }
-
-        mTitleBar = new TitleBarWidget(aContext);
-        mTitleBar.attachToWindow(this);
 
         mPromptDelegate = new PromptDelegate(getContext());
         mPromptDelegate.attachToWindow(this);
@@ -345,12 +341,7 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
         hideContextMenus();
         releaseWidget();
         mLibrary.onDestroy();
-        mViewModel.setIsTitleBarVisible(false);
         SessionStore.get().destroySession(mSession);
-        if (mTitleBar != null) {
-            mWidgetManager.removeWidget(mTitleBar);
-            mTitleBar.setDelegate((TitleBarWidget.Delegate) null);
-        }
         mListeners.clear();
 
         if (mPromptDelegate != null){
@@ -661,10 +652,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
 
     public void setResizeMode(boolean resizing) {
         mViewModel.setIsResizeMode(resizing);
-    }
-
-    public TitleBarWidget getTitleBar() {
-        return mTitleBar;
     }
 
     @Override

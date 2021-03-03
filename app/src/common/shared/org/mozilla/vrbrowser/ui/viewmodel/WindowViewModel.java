@@ -43,7 +43,6 @@ public class WindowViewModel extends AndroidViewModel {
     private MediatorLiveData<ObservableBoolean> showClearButton;
     private MutableLiveData<ObservableBoolean> isInsecure;
     private MutableLiveData<ObservableBoolean> isActiveWindow;
-    private MediatorLiveData<ObservableBoolean> isTitleBarVisible;
     private MutableLiveData<ObservableBoolean> isLibraryVisible;
     private MutableLiveData<ObservableBoolean> isLoading;
     private MutableLiveData<ObservableBoolean> isMicrophoneEnabled;
@@ -57,7 +56,6 @@ public class WindowViewModel extends AndroidViewModel {
     private MutableLiveData<ObservableBoolean> isInVRVideo;
     private MutableLiveData<ObservableBoolean> autoEnteredVRVideo;
     private MediatorLiveData<ObservableBoolean> isServoAvailable;
-    private MediatorLiveData<String> titleBarUrl;
     private MediatorLiveData<ObservableBoolean> isInsecureVisible;
     private MutableLiveData<ObservableBoolean> isMediaAvailable;
     private MutableLiveData<ObservableBoolean> isMediaPlaying;
@@ -101,14 +99,6 @@ public class WindowViewModel extends AndroidViewModel {
         isInsecure = new MutableLiveData<>(new ObservableBoolean(false));
         isActiveWindow = new MutableLiveData<>(new ObservableBoolean(false));
 
-        isTitleBarVisible = new MediatorLiveData<>();
-        isTitleBarVisible.addSource(isFullscreen, mIsTitleBarVisibleObserver);
-        isTitleBarVisible.addSource(isResizeMode, mIsTitleBarVisibleObserver);
-        isTitleBarVisible.addSource(isActiveWindow, mIsTitleBarVisibleObserver);
-        isTitleBarVisible.addSource(isWindowVisible, mIsTitleBarVisibleObserver);
-        isTitleBarVisible.addSource(isOnlyWindow, mIsTitleBarVisibleObserver);
-        isTitleBarVisible.setValue(new ObservableBoolean(true));
-
         isLibraryVisible = new MutableLiveData<>(new ObservableBoolean(false));
 
         isLoading = new MutableLiveData<>(new ObservableBoolean(false));
@@ -126,10 +116,6 @@ public class WindowViewModel extends AndroidViewModel {
         isServoAvailable = new MediatorLiveData<>();
         isServoAvailable.addSource(url, mIsServoAvailableObserver);
         isServoAvailable.setValue(new ObservableBoolean(false));
-
-        titleBarUrl = new MediatorLiveData<>();
-        titleBarUrl.addSource(url, mTitleBarUrlObserver);
-        titleBarUrl.setValue("");
 
         isInsecureVisible = new MediatorLiveData<>();
         isInsecureVisible.addSource(isInsecure, mIsInsecureVisibleObserver);
@@ -177,51 +163,12 @@ public class WindowViewModel extends AndroidViewModel {
         }
     };
 
-    private Observer<ObservableBoolean> mIsTitleBarVisibleObserver = new Observer<ObservableBoolean>() {
-        @Override
-        public void onChanged(ObservableBoolean o) {
-            if (isFullscreen.getValue().get() || isResizeMode.getValue().get() || isActiveWindow.getValue().get()) {
-                isTitleBarVisible.postValue(new ObservableBoolean(false));
-
-            } else {
-                isTitleBarVisible.postValue(new ObservableBoolean(isWindowVisible.getValue().get() && !isOnlyWindow.getValue().get()));
-            }
-        }
-    };
-
     private Observer<Spannable> mIsServoAvailableObserver = new Observer<Spannable>() {
         @Override
         public void onChanged(Spannable url) {
             boolean isPrefEnabled = SettingsStore.getInstance(getApplication()).isServoEnabled();
             boolean isUrlAllowListed = ServoUtils.isUrlInServoAllowList(getApplication(), url.toString());
             isServoAvailable.postValue(new ObservableBoolean(isPrefEnabled && isUrlAllowListed));
-        }
-    };
-
-    private Observer<Spannable> mTitleBarUrlObserver = new Observer<Spannable>() {
-        @Override
-        public void onChanged(Spannable aUrl) {
-            String url = aUrl.toString();
-            if (isLibraryVisible.getValue().get()) {
-                url = getApplication().getString(R.string.url_library_title);
-
-            } else {
-                if (UrlUtils.isPrivateAboutPage(getApplication(), url) ||
-                        (UrlUtils.isDataUri(url) && isPrivateSession.getValue().get())) {
-                    url = getApplication().getString(R.string.private_browsing_title);
-
-                } else if (UrlUtils.isHomeUri(getApplication(), aUrl.toString())) {
-                    url = getApplication().getString(R.string.url_home_title, getApplication().getString(R.string.app_name));
-
-                } else if (UrlUtils.isWebExtensionUrl(aUrl.toString())) {
-                    url = getApplication().getString(R.string.web_extensions_title);
-
-                } else if (UrlUtils.isBlankUri(getApplication(), aUrl.toString())) {
-                    url = "";
-                }
-            }
-
-            titleBarUrl.postValue(UrlUtils.titleBarUrl(url));
         }
     };
 
@@ -317,7 +264,6 @@ public class WindowViewModel extends AndroidViewModel {
         canGoBack.postValue(canGoBack.getValue());
         isInVRVideo.postValue(isInVRVideo.getValue());
         autoEnteredVRVideo.postValue(autoEnteredVRVideo.getValue());
-        titleBarUrl.setValue(titleBarUrl.getValue());
         isMediaAvailable.postValue(isMediaAvailable.getValue());
         isMediaPlaying.postValue(isMediaPlaying.getValue());
         isWebXRUsed.postValue(isWebXRUsed.getValue());
@@ -477,15 +423,6 @@ public class WindowViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public MediatorLiveData<ObservableBoolean> getIsTitleBarVisible() {
-        return isTitleBarVisible;
-    }
-
-    public void setIsTitleBarVisible(boolean isTitleBarVisible) {
-        this.isTitleBarVisible.postValue(new ObservableBoolean(isTitleBarVisible));
-    }
-
-    @NonNull
     public MutableLiveData<ObservableBoolean> getIsActiveWindow() {
         return isActiveWindow;
     }
@@ -610,11 +547,6 @@ public class WindowViewModel extends AndroidViewModel {
     @NonNull
     public MutableLiveData<ObservableBoolean> getIsServoAvailable() {
         return isServoAvailable;
-    }
-
-    @NonNull
-    public MediatorLiveData<String> getTitleBarUrl() {
-        return titleBarUrl;
     }
 
     @NonNull

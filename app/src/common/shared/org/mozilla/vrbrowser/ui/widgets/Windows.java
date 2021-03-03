@@ -53,8 +53,7 @@ import mozilla.components.concept.sync.TabData;
 
 import static org.mozilla.vrbrowser.ui.widgets.settings.SettingsView.SettingViewType.FXA;
 
-public class Windows implements TitleBarWidget.Delegate,
-        WindowWidget.WindowListener, TabsWidget.TabDelegate, Services.TabReceivedDelegate {
+public class Windows implements WindowWidget.WindowListener, TabsWidget.TabDelegate, Services.TabReceivedDelegate {
 
     private static final String LOGTAG = SystemUtils.createLogtag(Windows.class);
 
@@ -787,9 +786,6 @@ public class Windows implements TitleBarWidget.Delegate,
             setFirstPaint(aWindow, aWindow.getSession());
         }
         aWindow.setVisible(aVisible);
-        if (aWindow != mFocusedWindow) {
-            aWindow.getTitleBar().setVisible(aVisible);
-        }
     }
 
     private void placeWindow(@NonNull WindowWidget aWindow, WindowPlacement aPosition) {
@@ -909,7 +905,6 @@ public class Windows implements TitleBarWidget.Delegate,
         windows.sort((o1, o2) -> o1 == frontWindow ? -1 : 0);
         for (WindowWidget window: getCurrentWindows()) {
             mWidgetManager.updateWidget(window);
-            mWidgetManager.updateWidget(window.getTitleBar());
         }
     }
 
@@ -925,7 +920,6 @@ public class Windows implements TitleBarWidget.Delegate,
 
         window.addWindowListener(this);
         getCurrentWindows().add(window);
-        window.getTitleBar().setDelegate(this);
 
         if (mPrivateMode) {
             GleanMetricsService.openWindowsEvent(mPrivateWindows.size() - 1, mPrivateWindows.size(), true);
@@ -1003,36 +997,6 @@ public class Windows implements TitleBarWidget.Delegate,
             // So trigger the first paint callback in case the window is grayed out
             // waiting for the first paint event.
             aWindow.onFirstContentfulPaint(aSession.getGeckoSession());
-        }
-    }
-
-    // Title Bar Delegate
-    @Override
-    public void onTitleClicked(@NonNull TitleBarWidget titleBar) {
-        if (titleBar.getAttachedWindow() != null) {
-            focusWindow(titleBar.getAttachedWindow());
-        }
-    }
-
-    @Override
-    public void onMediaPlayClicked(@NonNull TitleBarWidget titleBar) {
-        for (WindowWidget window : getCurrentWindows()) {
-            if (window.getTitleBar() == titleBar &&
-                    window.getSession() != null &&
-                    window.getSession().getActiveVideo() != null) {
-                window.getSession().getActiveVideo().play();
-            }
-        }
-    }
-
-    @Override
-    public void onMediaPauseClicked(@NonNull TitleBarWidget titleBar) {
-        for (WindowWidget window : getCurrentWindows()) {
-            if (window.getTitleBar() == titleBar &&
-                    window.getSession() != null &&
-                    window.getSession().getActiveVideo() != null) {
-                window.getSession().getActiveVideo().pause();
-            }
         }
     }
 
