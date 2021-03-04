@@ -71,7 +71,6 @@ import org.mozilla.vrbrowser.ui.widgets.WidgetManagerDelegate;
 import org.mozilla.vrbrowser.ui.widgets.WidgetPlacement;
 import org.mozilla.vrbrowser.ui.widgets.WindowWidget;
 import org.mozilla.vrbrowser.ui.widgets.Windows;
-import org.mozilla.vrbrowser.ui.widgets.dialogs.CrashDialogWidget;
 import org.mozilla.vrbrowser.ui.widgets.dialogs.PromptDialogWidget;
 import org.mozilla.vrbrowser.ui.widgets.dialogs.SendTabDialogWidget;
 import org.mozilla.vrbrowser.ui.widgets.menus.VideoProjectionMenuWidget;
@@ -164,7 +163,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     Windows mWindows;
     RootWidget mRootWidget;
     KeyboardWidget mKeyboard;
-    CrashDialogWidget mCrashDialog;
     WebXRInterstitialWidget mWebXRInterstitial;
     PermissionDelegate mPermissionDelegate;
     LinkedList<UpdateListener> mWidgetUpdateListeners;
@@ -242,7 +240,7 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
 
         BitmapCache.getInstance(this).onCreate();
 
-        EngineProvider.INSTANCE.getOrCreateRuntime(this).appendAppNotesToCrashReport("Firefox Reality " + BuildConfig.VERSION_NAME + "-" + BuildConfig.VERSION_CODE + "-" + BuildConfig.FLAVOR + "-" + BuildConfig.BUILD_TYPE + " (" + BuildConfig.GIT_HASH + ")");
+        EngineProvider.INSTANCE.getOrCreateRuntime(this).appendAppNotesToCrashReport("Version " + BuildConfig.VERSION_NAME + "-" + BuildConfig.VERSION_CODE + "-" + BuildConfig.FLAVOR + "-" + BuildConfig.BUILD_TYPE + " (" + BuildConfig.GIT_HASH + ")");
 
         // Create broadcast receiver for getting crash messages from crash process
         IntentFilter intentFilter = new IntentFilter();
@@ -601,12 +599,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
         boolean isCrashReportingEnabled = SettingsStore.getInstance(this).isCrashReportingEnabled();
         if (isCrashReportingEnabled) {
             SystemUtils.postCrashFiles(this, files);
-
-        } else {
-            if (mCrashDialog == null) {
-                mCrashDialog = new CrashDialogWidget(this, files);
-            }
-            mCrashDialog.show(UIWidget.REQUEST_FOCUS);
         }
     }
 
@@ -622,11 +614,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
         if (isCrashReportingEnabled) {
             SystemUtils.postCrashFiles(this, dumpFile, extraFile);
 
-        } else {
-            if (mCrashDialog == null) {
-                mCrashDialog = new CrashDialogWidget(this, dumpFile, extraFile);
-            }
-            mCrashDialog.show(UIWidget.REQUEST_FOCUS);
         }
     }
 
