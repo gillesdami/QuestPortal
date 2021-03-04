@@ -61,6 +61,8 @@ ADD third_party /opt/QuestPortal/third_party
 # Copy client config & code
 ADD gradle.properties /opt/QuestPortal/gradle.properties
 ADD app/src/main/assets/app /opt/QuestPortal/app/src/main/assets/app
+ADD app/src/main/assets/logo.png /opt/QuestPortal/app/src/main/assets/logo.png
+ADD app/src/main/res /opt/QuestPortal/app/src/main/res
 
 # Build project and run gradle tasks once to pull all dependencies
 RUN ./gradlew $BUILD_VARIANT

@@ -4,7 +4,7 @@ TODO
 
 ## dev notes
 
-Todo later clean unused views and constants, test docker, write a proper readme, ease permissions on ressource://, update images/logos.
+Todo later clean unused views and constants, write a proper readme, ease permissions on ressource://.
 
 ## how to
 

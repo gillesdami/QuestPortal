@@ -2,3 +2,5 @@
 !third_party
 !gradle.properties
 !app/src/main/assets/app
+!app/src/main/assets/logo.png
+!app/src/main/res

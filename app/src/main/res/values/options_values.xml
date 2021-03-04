@@ -8,12 +8,10 @@
 
     <string-array name="developer_options_environments_values" translatable="false">
         <item>void</item>
-        <item>offworld</item>
     </string-array>
 
     <array name="developer_options_environments_images" translatable="false">
         <item>@color/black</item>
-        <item>@drawable/environment_offworld</item>
     </array>
 
     <!-- Pointer Options -->
