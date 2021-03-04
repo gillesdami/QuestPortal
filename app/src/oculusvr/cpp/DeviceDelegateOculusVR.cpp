@@ -27,8 +27,8 @@
 #include <vector>
 #include <cstdlib>
 #include <unistd.h>
-#include <VrApi_Types.h>
 
+#include "VrApi_Types.h"
 #include "VrApi.h"
 #include "VrApi_Helpers.h"
 #include "VrApi_Input.h"
