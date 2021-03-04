@@ -77,12 +77,16 @@ public class PermissionDelegate implements GeckoSession.PermissionDelegate, Widg
     }
 
     public void handlePermission(final String aUri, final PermissionWidget.PermissionType aType, final Callback aCallback) {
-        if (mPermissionWidget == null) {
-            mPermissionWidget = new PermissionWidget(mContext);
-            mWidgetManager.addWidget(mPermissionWidget);
-        }
+        if (UrlUtils.getProtocol(aUri).equals("resource")) {
+            aCallback.grant();
+        } else {
+            if (mPermissionWidget == null) {
+                mPermissionWidget = new PermissionWidget(mContext);
+                mWidgetManager.addWidget(mPermissionWidget);
+            }
 
-        mPermissionWidget.showPrompt(aUri, aType, aCallback);
+            mPermissionWidget.showPrompt(aUri, aType, aCallback);
+        }
     }
 
     private Observer<List<SitePermission>> mSitePermissionObserver = sites -> {

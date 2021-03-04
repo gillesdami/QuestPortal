@@ -221,6 +221,15 @@ public class UrlUtils {
         }
     }
 
+    public static String getProtocol(String uri) {
+        try {
+            URL url = new URL(uri);
+            return url.getProtocol();
+        } catch (MalformedURLException e) {
+            return uri;
+        }
+    }
+
     public static URI parseUri(String aUri) throws URISyntaxException {
         try {
             return new URI(aUri);
