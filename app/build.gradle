@@ -115,6 +115,7 @@ android {
             resValue "string", "homepage_url", homepage_url
             resValue "string", "app_name", app_name
             resValue "bool", "remote_debugging_enabled", remote_debugging_enabled
+            resValue "string", "skybox", skybox
         }
         debug {
             applicationIdSuffix getDevApplicationIdSuffix()
@@ -123,6 +124,7 @@ android {
             resValue "string", "homepage_url", homepage_url
             resValue "string", "app_name", app_name
             resValue "bool", "remote_debugging_enabled", remote_debugging_enabled
+            resValue "string", "skybox", skybox
         }
     }
 

@@ -107,8 +107,8 @@ class EnvironmentOptionsView extends SettingsView implements EnvironmentsManager
             updated = true;
         }
 
-        if (!mEnvironmentsRadio.getValueForId(mEnvironmentsRadio.getCheckedRadioButtonId()).equals(SettingsStore.ENV_DEFAULT)) {
-            setEnv(mEnvironmentsRadio.getIdForValue(SettingsStore.ENV_DEFAULT), true);
+        if (!mEnvironmentsRadio.getValueForId(mEnvironmentsRadio.getCheckedRadioButtonId()).equals(getContext().getString(R.string.skybox))) {
+            setEnv(mEnvironmentsRadio.getIdForValue(getContext().getString(R.string.skybox)), true);
             updated = true;
         }
 
