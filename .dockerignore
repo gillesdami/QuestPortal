@@ -1,0 +1,4 @@
+*
+!third_party
+!gradle.properties
+!app/src/main/assets/app

@@ -6,6 +6,7 @@
 # https://hub.docker.com/r/runmymind/docker-android-sdk/~/dockerfile/
 
 FROM ubuntu:18.04
+ARG BUILD_VARIANT=assembleOculusvrArm64Debug
 
 # -- System -----------------------------------------------------------------------------
 
@@ -26,8 +27,6 @@ RUN apt-get install -y openjdk-8-jdk \
 					   optipng \
 					   imagemagick \
 					   locales
-RUN gem install fastlane
-RUN pip install taskcluster
 
 RUN locale-gen en_US.UTF-8
 
@@ -51,15 +50,17 @@ WORKDIR /opt
 
 # Checkout source code
 RUN git clone https://github.com/gillesdami/QuestPortal.git
-
-# Build project and run gradle tasks once to pull all dependencies
 WORKDIR /opt/QuestPortal
 RUN echo sdk.dir=/opt > local.properties && echo ndk.dir=/opt/ndk-bundle >> local.properties
 RUN git submodule init
 RUN git submodule update
-RUN ./gradlew --no-daemon assembleNoapi
-RUN ./gradlew --no-daemon clean
 
-# -- Cleanup ----------------------------------------------------------------------------
+# Copy third_party
+ADD third_party /opt/QuestPortal/third_party
 
-RUN apt-get clean
+# Copy client config & code
+ADD gradle.properties /opt/QuestPortal/gradle.properties
+ADD app/src/main/assets/app /opt/QuestPortal/app/src/main/assets/app
+
+# Build project and run gradle tasks once to pull all dependencies
+RUN ./gradlew $BUILD_VARIANT

@@ -20,3 +20,8 @@ Todo later clean unused views and constants, test docker, write a proper readme,
 - run gradlew (requires JDK 8)
 - open android studio
 - select a build variant
+
+## how to docker
+
+docker build -t qp-noapi:test .
+--build-arg BUILD_VARIANT=assembleNoapi
