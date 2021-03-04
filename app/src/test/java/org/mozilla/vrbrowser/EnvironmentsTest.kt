@@ -2,7 +2,6 @@ package org.mozilla.vrbrowser
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import mozilla.components.service.glean.testing.GleanTestRule
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -19,9 +18,6 @@ import java.io.File
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE, application = TestApplication::class)
 class EnvironmentsTest {
-
-    @get:Rule
-    val gleanRule = GleanTestRule(ApplicationProvider.getApplicationContext())
     lateinit var settingStore: SettingsStore
     private lateinit var context: Context
 

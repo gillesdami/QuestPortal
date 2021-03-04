@@ -37,7 +37,6 @@ import org.mozilla.vrbrowser.browser.SettingsStore;
 import org.mozilla.vrbrowser.browser.engine.Session;
 import org.mozilla.vrbrowser.databinding.SettingsBinding;
 import org.mozilla.vrbrowser.db.SitePermission;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.viewmodel.SettingsViewModel;
 import org.mozilla.vrbrowser.ui.widgets.UIWidget;
 import org.mozilla.vrbrowser.ui.widgets.WidgetPlacement;
@@ -300,8 +299,6 @@ public class SettingsWidget extends UIDialog implements SettingsView.Delegate {
                                 String sessionId = currentSession != null ? currentSession.getId() : null;
 
                                 mAccounts.setOrigin(Accounts.LoginOrigin.SETTINGS, sessionId);
-
-                                GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.FXA_LOGIN);
                             }
 
                         }, mUIThreadExecutor).exceptionally(throwable -> {

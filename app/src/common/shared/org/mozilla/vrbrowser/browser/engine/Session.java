@@ -41,7 +41,6 @@ import org.mozilla.vrbrowser.browser.VideoAvailabilityListener;
 import org.mozilla.vrbrowser.browser.content.TrackingProtectionPolicy;
 import org.mozilla.vrbrowser.browser.content.TrackingProtectionStore;
 import org.mozilla.vrbrowser.geolocation.GeolocationData;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.utils.BitmapCache;
 import org.mozilla.vrbrowser.utils.InternalPages;
 import org.mozilla.vrbrowser.utils.SystemUtils;
@@ -1218,7 +1217,6 @@ public class Session implements ContentBlocking.Delegate, GeckoSession.Navigatio
         }
         Log.d(LOGTAG, "Session onPageStart");
         mState.mIsLoading = true;
-        GleanMetricsService.startPageLoadTime(aUri);
 
         setWebXRState(SessionState.WEBXR_UNUSED);
         for (GeckoSession.ProgressDelegate listener : mProgressListeners) {
@@ -1233,9 +1231,6 @@ public class Session implements ContentBlocking.Delegate, GeckoSession.Navigatio
         }
         Log.d(LOGTAG, "Session onPageStop");
         mState.mIsLoading = false;
-        if (!SessionUtils.isLocalizedContent(mState.mUri)) {
-            GleanMetricsService.stopPageLoadTimeWithURI(mState.mUri);
-        }
 
         for (GeckoSession.ProgressDelegate listener : mProgressListeners) {
             listener.onPageStop(aSession, b);

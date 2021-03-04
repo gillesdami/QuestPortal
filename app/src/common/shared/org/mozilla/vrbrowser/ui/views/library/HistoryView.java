@@ -27,7 +27,6 @@ import org.mozilla.vrbrowser.browser.SettingsStore;
 import org.mozilla.vrbrowser.browser.engine.Session;
 import org.mozilla.vrbrowser.browser.engine.SessionStore;
 import org.mozilla.vrbrowser.databinding.HistoryBinding;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.adapters.HistoryAdapter;
 import org.mozilla.vrbrowser.ui.callbacks.HistoryCallback;
 import org.mozilla.vrbrowser.ui.callbacks.HistoryContextMenuCallback;
@@ -243,8 +242,6 @@ public class HistoryView extends LibraryView implements HistoryStore.HistoryList
 
                             mAccounts.setOrigin(Accounts.LoginOrigin.HISTORY, sessionId);
 
-                            GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.FXA_LOGIN);
-
                             WindowWidget window = mWidgetManager.getFocusedWindow();
                             window.hidePanel();
                         }
@@ -444,7 +441,6 @@ public class HistoryView extends LibraryView implements HistoryStore.HistoryList
         @Override
         public void onOpenInNewTabClick(LibraryContextMenuWidget.LibraryContextMenuItem item) {
             mWidgetManager.openNewTabForeground(item.getUrl());
-            GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.BOOKMARKS);
             hideContextMenu();
         }
 

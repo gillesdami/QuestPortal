@@ -25,7 +25,6 @@ import org.mozilla.vrbrowser.R;
 import org.mozilla.vrbrowser.VRBrowserActivity;
 import org.mozilla.vrbrowser.VRBrowserApplication;
 import org.mozilla.vrbrowser.browser.engine.EngineProvider;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.viewmodel.SettingsViewModel;
 import org.mozilla.vrbrowser.ui.widgets.menus.library.SortingContextMenuWidget;
 import org.mozilla.vrbrowser.utils.DeviceType;
@@ -209,13 +208,6 @@ public class SettingsStore {
         SharedPreferences.Editor editor = mPrefs.edit();
         editor.putBoolean(mContext.getString(R.string.settings_key_telemetry), isEnabled);
         editor.commit();
-
-        // We send after enabling in case of opting-in
-        if (isEnabled) {
-            GleanMetricsService.start();
-        } else {
-            GleanMetricsService.stop();
-        }
 
         // Update the status sent flag
         setTelemetryPingUpdateSent(true);

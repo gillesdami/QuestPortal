@@ -25,7 +25,6 @@ import mozilla.components.service.fxa.sync.SyncStatusObserver
 import mozilla.components.service.fxa.sync.getLastSynced
 import org.mozilla.vrbrowser.R
 import org.mozilla.vrbrowser.VRBrowserApplication
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService
 import org.mozilla.vrbrowser.utils.BitmapCache
 import org.mozilla.vrbrowser.utils.SystemUtils
 import org.mozilla.vrbrowser.utils.ViewUtils
@@ -124,10 +123,6 @@ class Accounts constructor(val context: Context) {
         override fun onAuthenticated(account: OAuthAccount, authType: AuthType) {
             Log.d(LOGTAG, "The user has been successfully logged in")
 
-            if (authType !== AuthType.Existing) {
-                GleanMetricsService.FxA.signInResult(true)
-            }
-
             accountStatus = AccountStatus.SIGNED_IN
 
             // Enable syncing after signing in
@@ -151,8 +146,6 @@ class Accounts constructor(val context: Context) {
 
         override fun onAuthenticationProblems() {
             Log.d(LOGTAG, "There was a problem authenticating the user")
-
-            GleanMetricsService.FxA.signInResult(false)
 
             originSessionId = null
 
@@ -291,7 +284,6 @@ class Accounts constructor(val context: Context) {
     }
 
     fun authUrlAsync(): CompletableFuture<String?>? {
-        GleanMetricsService.FxA.signIn()
         return CoroutineScope(Dispatchers.Main).future {
             services.accountManager.beginAuthenticationAsync().await()
         }
@@ -324,12 +316,8 @@ class Accounts constructor(val context: Context) {
 
     fun setSyncStatus(engine: SyncEngine, value: Boolean) {
         when(engine) {
-            SyncEngine.Bookmarks -> {
-                GleanMetricsService.FxA.bookmarksSyncStatus(value)
-            }
-            SyncEngine.History -> {
-                GleanMetricsService.FxA.historySyncStatus(value)
-            }
+            SyncEngine.Bookmarks -> {}
+            SyncEngine.History -> {}
         }
 
         syncStorage.setStatus(engine, value)
@@ -340,8 +328,6 @@ class Accounts constructor(val context: Context) {
     }
 
     fun logoutAsync(): CompletableFuture<Unit?>? {
-        GleanMetricsService.FxA.signOut()
-
         otherDevices = emptyList()
         return CoroutineScope(Dispatchers.Main).future {
             services.accountManager.logoutAsync().await()
@@ -379,7 +365,7 @@ class Accounts constructor(val context: Context) {
                 targets?.forEach { it ->
                     constellation.sendCommandToDeviceAsync(
                             it.id, DeviceCommandOutgoing.SendTab(title, url)
-                    ).await().also { if (it) GleanMetricsService.FxA.sentTab() }
+                    ).await()
                 }
             }
         }

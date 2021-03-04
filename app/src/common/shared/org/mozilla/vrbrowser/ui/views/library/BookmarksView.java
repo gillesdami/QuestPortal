@@ -27,7 +27,6 @@ import org.mozilla.vrbrowser.browser.SettingsStore;
 import org.mozilla.vrbrowser.browser.engine.Session;
 import org.mozilla.vrbrowser.browser.engine.SessionStore;
 import org.mozilla.vrbrowser.databinding.BookmarksBinding;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.adapters.Bookmark;
 import org.mozilla.vrbrowser.ui.adapters.BookmarkAdapter;
 import org.mozilla.vrbrowser.ui.adapters.CustomLinearLayoutManager;
@@ -236,8 +235,6 @@ public class BookmarksView extends LibraryView implements BookmarksStore.Bookmar
 
                             mAccounts.setOrigin(Accounts.LoginOrigin.BOOKMARKS, sessionId);
 
-                            GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.FXA_LOGIN);
-
                             WindowWidget window = mWidgetManager.getFocusedWindow();
                             window.hidePanel();
                         }
@@ -391,7 +388,6 @@ public class BookmarksView extends LibraryView implements BookmarksStore.Bookmar
         @Override
         public void onOpenInNewTabClick(LibraryContextMenuWidget.LibraryContextMenuItem item) {
             mWidgetManager.openNewTabForeground(item.getUrl());
-            GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.BOOKMARKS);
             hideContextMenu();
         }
     };

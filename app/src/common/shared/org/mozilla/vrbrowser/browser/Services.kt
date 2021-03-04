@@ -29,7 +29,6 @@ import org.mozilla.geckoview.GeckoSession
 import org.mozilla.vrbrowser.R
 import org.mozilla.vrbrowser.VRBrowserActivity
 import org.mozilla.vrbrowser.browser.engine.EngineProvider
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService
 import org.mozilla.vrbrowser.ui.widgets.WidgetManagerDelegate
 import org.mozilla.vrbrowser.utils.ConnectivityReceiver
 import org.mozilla.vrbrowser.utils.SystemUtils
@@ -79,7 +78,6 @@ class Services(val context: Context, places: Places): GeckoSession.NavigationDel
                         .map { it.command }
                         .filterIsInstance<DeviceCommandIncoming.TabReceived>()
                         .forEach { command ->
-                            command.from?.deviceType?.let { GleanMetricsService.FxA.receivedTab(it) }
                             tabReceivedDelegate?.onTabsReceived(command.entries)
                         }
             }

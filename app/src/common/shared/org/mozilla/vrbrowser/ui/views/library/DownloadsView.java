@@ -26,7 +26,6 @@ import org.mozilla.vrbrowser.browser.engine.SessionStore;
 import org.mozilla.vrbrowser.databinding.DownloadsBinding;
 import org.mozilla.vrbrowser.downloads.Download;
 import org.mozilla.vrbrowser.downloads.DownloadsManager;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.adapters.DownloadsAdapter;
 import org.mozilla.vrbrowser.ui.callbacks.DownloadItemCallback;
 import org.mozilla.vrbrowser.ui.callbacks.DownloadsCallback;
@@ -271,7 +270,6 @@ public class DownloadsView extends LibraryView implements DownloadsManager.Downl
         @Override
         public void onOpenInNewTabClick(LibraryContextMenuWidget.LibraryContextMenuItem item) {
             mWidgetManager.openNewTabForeground(item.getUrl());
-            GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.DOWNLOADS);
             hideContextMenu();
         }
 

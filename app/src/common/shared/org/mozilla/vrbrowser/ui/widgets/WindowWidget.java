@@ -55,7 +55,6 @@ import org.mozilla.vrbrowser.browser.engine.SessionState;
 import org.mozilla.vrbrowser.browser.engine.SessionStore;
 import org.mozilla.vrbrowser.downloads.DownloadJob;
 import org.mozilla.vrbrowser.downloads.DownloadsManager;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.viewmodel.WindowViewModel;
 import org.mozilla.vrbrowser.ui.views.library.LibraryPanel;
 import org.mozilla.vrbrowser.ui.widgets.dialogs.PromptDialogWidget;
@@ -211,7 +210,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
         mPromptDelegate.attachToWindow(this);
 
         setFocusable(true);
-        GleanMetricsService.openWindowEvent(mWindowId);
 
         if (mSession.getGeckoSession() != null) {
             onCurrentSessionChange(null, mSession.getGeckoSession());
@@ -337,7 +335,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
     }
 
     public void close() {
-        GleanMetricsService.closeWindowEvent(mWindowId);
         hideContextMenus();
         releaseWidget();
         mLibrary.onDestroy();
@@ -564,16 +561,10 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
     }
 
     public void setWindowPlacement(@NonNull Windows.WindowPlacement aPlacement) {
-        if (mActive) {
-            GleanMetricsService.activePlacementEvent(mWindowPlacement.getValue(), false);
-        }
         mWindowPlacement = aPlacement;
         mViewModel.setWidth(mWidgetPlacement.width);
         mViewModel.setHeight(mWidgetPlacement.height);
         mViewModel.setPlacement(mWindowPlacement);
-        if (mActive) {
-            GleanMetricsService.activePlacementEvent(mWindowPlacement.getValue(), true);
-        }
     }
 
     public void setIsOnlyWindow(boolean isOnlyWindow) {
@@ -629,7 +620,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
 
         hideContextMenus();
 
-        GleanMetricsService.activePlacementEvent(mWindowPlacement.getValue(), mActive);
         updateBorder();
 
         mViewModel.setIsActiveWindow(active);
@@ -1099,8 +1089,6 @@ public class WindowWidget extends UIWidget implements SessionChangeListener,
         // full screen ones in a new tab. Otherwise the navigation bar has not the correct size and
         // the notification is misplaced.
         postDelayed(() -> mWidgetManager.getWindows().showTabAddedNotification(), 500);
-
-        GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.BROWSER);
     }
 
     @Override

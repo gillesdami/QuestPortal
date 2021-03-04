@@ -39,7 +39,6 @@ import org.mozilla.vrbrowser.R;
 import org.mozilla.vrbrowser.browser.SettingsStore;
 import org.mozilla.vrbrowser.browser.engine.Session;
 import org.mozilla.vrbrowser.input.CustomKeyboard;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.keyboards.ChinesePinyinKeyboard;
 import org.mozilla.vrbrowser.ui.keyboards.ChineseZhuyinKeyboard;
 import org.mozilla.vrbrowser.ui.keyboards.DanishKeyboard;
@@ -1081,7 +1080,6 @@ public class KeyboardWidget extends UIWidget implements CustomKeyboardView.OnKey
             mVoiceSearchWidget.setDelegate(() -> exitVoiceInputMode()); // DismissDelegate
         }
         mIsInVoiceInput = true;
-        GleanMetricsService.voiceInputEvent();
         mVoiceSearchWidget.show(CLEAR_FOCUS);
         mWidgetPlacement.visible = false;
         mWidgetManager.updateWidget(this);

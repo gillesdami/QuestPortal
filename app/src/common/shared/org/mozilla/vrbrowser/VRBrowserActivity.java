@@ -58,7 +58,6 @@ import org.mozilla.vrbrowser.crashreporting.GlobalExceptionHandler;
 import org.mozilla.vrbrowser.geolocation.GeolocationWrapper;
 import org.mozilla.vrbrowser.input.MotionEventGenerator;
 import org.mozilla.vrbrowser.search.SearchEngineWrapper;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.OffscreenDisplay;
 import org.mozilla.vrbrowser.ui.adapters.Language;
 import org.mozilla.vrbrowser.ui.widgets.AppServicesProvider;
@@ -373,7 +372,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
     protected void onStop() {
         SettingsStore.getInstance(getBaseContext()).setPid(0);
         super.onStop();
-        GleanMetricsService.sessionStop();
     }
 
     public void flushBackHandlers() {
@@ -958,7 +956,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
                 listener.onEnterWebXR();
             }
         });
-        GleanMetricsService.startImmersive();
 
         PauseCompositorRunnable runnable = new PauseCompositorRunnable();
 
@@ -991,7 +988,6 @@ public class VRBrowserActivity extends PlatformActivity implements WidgetManager
         // Show the window in front of you when you exit immersive mode.
         recenterUIYaw(WidgetManagerDelegate.YAW_TARGET_ALL);
 
-        GleanMetricsService.stopImmersive();
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> {
             if (!mWindows.isPaused()) {

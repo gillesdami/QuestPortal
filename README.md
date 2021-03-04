@@ -4,7 +4,7 @@ TODO
 
 ## dev notes
 
-Ensure no metrics (GLEAN) or bug report is sent to moz.
+Ensure no bug report is sent to moz.
 Todo later clean unused views and constants, fix VrApi_Types.h, test docker, write a proper readme, ease permissions on ressource://, update images/logos.
 
 ## how to

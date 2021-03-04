@@ -25,7 +25,6 @@ import org.mozilla.vrbrowser.browser.engine.Session;
 import org.mozilla.vrbrowser.browser.engine.SessionState;
 import org.mozilla.vrbrowser.browser.engine.SessionStore;
 import org.mozilla.vrbrowser.downloads.DownloadsManager;
-import org.mozilla.vrbrowser.telemetry.GleanMetricsService;
 import org.mozilla.vrbrowser.ui.widgets.dialogs.PromptDialogWidget;
 import org.mozilla.vrbrowser.ui.widgets.dialogs.UIDialog;
 import org.mozilla.vrbrowser.utils.BitmapCache;
@@ -316,10 +315,6 @@ public class Windows implements WindowWidget.WindowListener, TabsWidget.TabDeleg
         updateCurvedMode(true);
         updateViews();
 
-        // We are only interested in general windows opened.
-        if (!isInPrivateMode()) {
-            GleanMetricsService.newWindowOpenEvent();
-        }
         return newWindow;
     }
 
@@ -506,9 +501,6 @@ public class Windows implements WindowWidget.WindowListener, TabsWidget.TabDeleg
         if (mCompositorPaused) {
             resumeCompositor();
         }
-
-        GleanMetricsService.resetOpenedWindowsCount(mRegularWindows.size(), false);
-        GleanMetricsService.resetOpenedWindowsCount(mPrivateWindows.size(), true);
     }
 
     public boolean isPaused() {
@@ -773,12 +765,6 @@ public class Windows implements WindowWidget.WindowListener, TabsWidget.TabDeleg
         aWindow.close();
         updateMaxWindowScales();
         updateCurvedMode(true);
-
-        if (mPrivateMode) {
-            GleanMetricsService.openWindowsEvent(mPrivateWindows.size() + 1, mPrivateWindows.size(), true);
-        } else {
-            GleanMetricsService.openWindowsEvent(mRegularWindows.size() + 1, mRegularWindows.size(), false);
-        }
     }
 
     private void setWindowVisible(@NonNull WindowWidget aWindow, boolean aVisible) {
@@ -920,12 +906,6 @@ public class Windows implements WindowWidget.WindowListener, TabsWidget.TabDeleg
 
         window.addWindowListener(this);
         getCurrentWindows().add(window);
-
-        if (mPrivateMode) {
-            GleanMetricsService.openWindowsEvent(mPrivateWindows.size() - 1, mPrivateWindows.size(), true);
-        } else {
-            GleanMetricsService.openWindowsEvent(mRegularWindows.size() - 1, mRegularWindows.size(), false);
-        }
 
         mForcedCurvedMode = getCurrentWindows().size() > 1;
 
@@ -1098,10 +1078,6 @@ public void selectTab(@NonNull Session aTab) {
 
     @Override
     public void onTabSelect(Session aTab) {
-        if (mFocusedWindow.getSession() != aTab) {
-            GleanMetricsService.Tabs.activatedEvent();
-        }
-
         WindowWidget targetWindow = mFocusedWindow;
         WindowWidget windowToMove = getWindowWithSession(aTab);
         if (windowToMove != null && windowToMove != targetWindow) {
@@ -1183,7 +1159,6 @@ public void selectTab(@NonNull Session aTab) {
     @Override
     public void onTabAdd() {
         addTab(mFocusedWindow);
-        GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.TABS_DIALOG);
     }
 
     @Override
@@ -1268,8 +1243,6 @@ public void selectTab(@NonNull Session aTab) {
             session.getSessionState().mUri = aTabs.get(i).getUrl();
             session.loadUri(aTabs.get(i).getUrl());
             session.updateLastUse();
-
-            GleanMetricsService.Tabs.openedCounter(GleanMetricsService.Tabs.TabSource.RECEIVED);
 
             if (i == 0 && !fullscreen) {
                 // Set the first received tab of the list the current one.
